@@ -207,6 +207,10 @@ commands =
 
 --- Main entry point.
 main = (using nil) ->
+    posix.signal 2, ->
+        -- Make C-c less ugly
+        os.exit 255
+
     args = parse_args!
 
     os.exit commands[args.command] args
