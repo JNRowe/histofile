@@ -15,6 +15,56 @@ HISTORY_TEMPLATE = "User-visible changes
 "
 MARKER_STRING = "^%.%. contents::"
 
+
+-- Coloured output support {{{
+
+--- Terminal escapes for colours
+ANSI_COLOURS = {s, n+29 for n, s in ipairs {"black", "red", "green", "yellow",
+                                            "blue", "magenta", "cyan", "white"}}
+
+
+--- Generate coloured output for the terminal.
+-- @param text Text to colourise
+-- @param colour Colour to use
+-- @param bold Use bold output
+-- @param underline Use underline output
+-- @return Colourised output
+colourise = (text, colour=nil, bold=false, underline=false using nil) ->
+    s = ""
+    if colour
+        s ..= "\027[#{ANSI_COLOURS[colour]}m"
+    if bold
+        s ..= "\027[1m"
+    if underline
+        s ..= "\027[4m"
+    "#{s}#{text}\027[0m"
+
+
+--- Standardised success message.
+-- @param text Text to colourise
+-- @param bold Use bold output
+-- @return Prettified success message
+success = (text, bold=true) ->
+    print colourise "✔ #{text}", "green", bold
+
+
+--- Standardised failure message.
+-- @param text Text to colourise
+-- @param bold Use bold output
+-- @return Prettified failure message
+fail = (text, bold=true) ->
+    io.stderr\write colourise("✘ #{text}", "red", bold) .. "\n"
+
+
+--- Standardised warning message.
+-- @param text Text to colourise
+-- @param bold Use bold output
+-- @return Prettified warning message
+warn = (text, bold=true) ->
+    io.stderr\write colourise("⚠ #{text}", "yellow", bold) .. "\n"
+-- }}}
+
+
 --- List valid history entries.
 -- @param path Path to search
 -- @return Matching entries
@@ -89,11 +139,11 @@ commands =
             for entry in *entries
                 time = tonumber entry\match "#{args.directory}/(.*)%.txt"
                 with io.open entry
-                    print os.date("%Y-%m-%dT%H:%M:%S", time),
+                    print colourise(os.date("%Y-%m-%dT%H:%M:%S", time), "magenta"),
                         \read("*a")
                     \close!
         else
-            print "No entries"
+            fail "No entries"
             return posix.ENOENT
         return 0
 
@@ -108,7 +158,7 @@ commands =
             file\write args.entry
             file\close
         else
-            print "ick!  Write failure"
+            fail "ick!  Write failure"
             return posix.EIO
         return 0
 
@@ -149,7 +199,7 @@ commands =
             else
                 print HISTORY_TEMPLATE
         else
-            print "No entries"
+            fail "No entries"
             return posix.ENOENT
         return 0
 -- }}}
