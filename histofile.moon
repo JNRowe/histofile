@@ -92,34 +92,23 @@ parse_args = (using nil) ->
             default: ".histofile"
         \command "list"
             description: "List history entries."
-        \command "new"
+        with \command "new"
             description: "Add new history entry."
-        \command "update"
+            \argument "entry"
+                description: "History entry to add."
+        with \command "update"
             description: "Update history file."
+            \argument "version"
+                description: "Version number of release."
+                convert: (s) -> s\match "^%d+%.%d+%.%d+$"
+            \argument "file"
+                description: "Location of history file."
+                default: "NEWS.rst"
+            \option "-d", "--date"
+                description: "Date of release."
+                default: os.date "%Y-%m-%d"
+                convert: (s) -> s\match "^%d%d%d%d%-%d%d%-%d%d$"
 
-    -- If nested with statements worked, this could look and feel far cleaner
-    for _, command in pairs parser._commands
-        switch command._name
-            when "list"
-                noop
-            when "new"
-                with command
-                    \argument "entry"
-                        description: "History entry to add."
-            when "update"
-                with command
-                    \argument "version"
-                        description: "Version number of release."
-                        convert: (s) -> s\match "^%d+%.%d+%.%d+$"
-                    \argument "file"
-                        description: "Location of history file."
-                        default: "NEWS"
-                    \option "-d", "--date"
-                        description: "Date of release."
-                        default: os.date "%Y-%m-%d"
-                        convert: (s) -> s\match "^%d%d%d%d%-%d%d%-%d%d$"
-            else
-                error "Unknown command"  -- To catch API changes mostly
     args = parser\parse!
     args.command = if args.list
         "list"

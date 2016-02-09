@@ -49,7 +49,7 @@ Patches
 Bug reports
 '''''''''''
 
-* <your name here>
+* Nathan McGregor
 
 Ideas
 '''''
