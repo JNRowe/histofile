@@ -6,7 +6,7 @@ DESCRIPTION = "Manage version history files"
 argparse = require "argparse"
 posix = require "posix"
 
-VERSION = "0.1.0"
+VERSION = require "version"
 
 HISTORY_TEMPLATE = "User-visible changes
 ====================
@@ -85,7 +85,7 @@ parse_args = (using nil) ->
         \flag "-v", "--version"
             description: "Show the version and exit."
             action: ->
-                print "#{NAME}, version #{VERSION}"
+                print "#{NAME}, version #{VERSION.dotted}"
                 os.exit 0
         \option "-d", "--directory"
             description: "Location to store history entries."
