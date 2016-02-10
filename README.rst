@@ -23,7 +23,7 @@ Requirements
 
 ``histofile``'s dependencies beyond lua_ are:
 
-* argparse_
+* argparse_ v0.5.0 or newer
 * luaposix_
 
 It should work with any version of ``lua`` v5.1 or newer, and also with

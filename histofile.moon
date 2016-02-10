@@ -108,45 +108,29 @@ list_entries = (path using nil) ->
 --- Parse command line arguments.
 -- @return Processed command line arguments
 parse_args = (using nil) ->
-    parser = with argparse(NAME)
-            description: DESCRIPTION
-            epilog: "Please report bugs at https://github.com/JNRowe/#{NAME}/issues"
+    parser = with argparse NAME, DESCRIPTION,
+            "Please report bugs at https://github.com/JNRowe/#{NAME}/issues"
 
-        \flag "-v", "--version"
-            description: "Show the version and exit."
-            action: ->
+        with \flag "-v --version", "Show the version and exit."
+            \action ->
                 print "#{NAME}, version #{VERSION.dotted}"
                 os.exit 0
-        \option "-d", "--directory"
-            description: "Location to store history entries."
-            default: ".histofile"
-        \command "list"
-            description: "List history entries."
-        with \command "new"
-            description: "Add new history entry."
-            \argument "entry"
-                description: "History entry to add."
-        with \command "update"
-            description: "Update history file."
-            \argument "version"
-                description: "Version number of release."
-                convert: (s) -> s\match "^%d+%.%d+%.%d+$"
-            \argument "file"
-                description: "Location of history file."
-                default: "NEWS.rst"
-            \option "-d", "--date"
-                description: "Date of release."
-                default: os.date "%Y-%m-%d"
-                convert: (s) -> s\match "^%d%d%d%d%-%d%d%-%d%d$"
+        \option "-d --directory", "Location to store history entries.",
+            ".histofile"
+        \command_target "command"
+        \command "list", "List history entries."
+        with \command "new", "Add new history entry."
+            \argument "entry", "History entry to add."
+        with \command "update", "Update history file."
+            with \argument "version", "Version number of release."
+                \convert => @match "^%d+%.%d+%.%d+$"
+            \argument "file", "Location of history file.",
+                "NEWS.rst"
+            \option "-d --date", "Date of release.",
+                os.date "%Y-%m-%d",
+                => @match "^%d%d%d%d%-%d%d%-%d%d$"
+    parser\parse!
 
-    args = parser\parse!
-    args.command = if args.list
-        "list"
-    elseif args.new
-        "new"
-    else
-        "update"
-    return args
 
 -- Main commands {{{
 
