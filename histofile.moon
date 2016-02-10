@@ -82,6 +82,19 @@ warn = (text, bold=true) ->
 -- }}}
 
 
+--- Wrap text for output
+-- @param text Text to format
+-- @param width Width of formatted text
+-- @initial_indent String to indent first line with
+-- @subsequent_indent String to indent all but the first line with
+wrap_entry = (text, width=72, initial_indent="", subsequent_indent=initial_indent using nil) ->
+    pos = 1 - #initial_indent
+    initial_indent .. text\gsub "(%s+)()(%S+)()", (_, start, word, _end using pos) ->
+        if _end - pos > width
+            pos = start - #subsequent_indent
+            "\n#{subsequent_indent}#{word}"
+
+
 --- List valid history entries.
 -- @param path Path to search
 -- @return Matching entries
@@ -172,12 +185,12 @@ commands =
     --- Update history file.
     -- @param args Parsed arguments
     update: (args using nil) ->
-        entry_to_bullet = (entry using nil) ->
-            text = "* "
+        entry_to_bullet = (entry) ->
+            text = ""
             file = io.open entry
             text ..= file\read("*a")\gsub "\n$", ""
             file\close!
-            return text
+            return wrap_entry text, 72, "* ", "  "
 
         if entries = list_entries args.directory
             if file = io.open args.file

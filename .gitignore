@@ -1,2 +1,4 @@
+doc/_build/
+
 *.html
 *.lua
