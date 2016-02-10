@@ -99,7 +99,7 @@ wrap_entry = (text, width=72, initial_indent="", subsequent_indent=initial_inden
 -- @param path Path to search
 -- @return Matching entries
 list_entries = (path using nil) ->
-    files = posix.glob "#{path}/[0-9][0-9]*.txt"
+    files = posix.glob "#{path}/[0-9][0-9]*[.0-9][0-9]*.txt"
     if files
         table.sort files
     return files
@@ -172,7 +172,11 @@ commands =
     new: (args using nil) ->
         unless posix.stat("#{args.directory}", "type") == "directory"
             posix.mkdir args.directory
-        name = "#{args.directory}/#{os.date '%s'}.txt"
+        {:sec, :usec} = posix.gettimeofday!
+        name = "%s/%s.%06d.txt"\format args.directory, os.date("!%s", sec), usec
+        if posix.access name
+            fail "wowzers, time clash with µsec is some fast history making"
+            return posix.EEXIST
         if file = io.open name, "w"
             file\write args.entry
             file\close
