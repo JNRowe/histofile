@@ -300,4 +300,4 @@ main = (using nil) ->
 if not package.loaded["busted"]
     main!
 else
-    :list_entries
+    :list_entries, :wrap_entry
