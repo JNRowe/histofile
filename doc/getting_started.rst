@@ -15,7 +15,7 @@ session:
     2016-02-10T12:03:00     Add support for cake baking
     2016-02-10T12:03:05     Removed support for window cleaning
     $ histofile update 0.2.0 NEWS.rst
-    <fancy new NEWS.rst>
+    <NEWS.rst is updated in place>
 
 Help on individual subcommands is available via ``histofile <subcommand>
 --help`` or in the :doc:`usage` document.

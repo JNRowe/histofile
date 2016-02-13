@@ -189,22 +189,32 @@ commands =
                     marker += 1
                 file\seek "set"
                 current = 0
+                output = {}
+                ins = (text) -> table.insert output, text
                 for line in file\lines!
                     if current != marker
-                        print line
+                        ins line
                     else
-                        print line
-                        print ""
+                        ins line
+                        ins ""
                         header = "#{args.version} - #{args.date}"
-                        print header
-                        print "-"\rep(#header)
-                        print ""
+                        ins header
+                        ins "-"\rep(#header)
+                        ins ""
                         for entry in *entries
-                            print entry_to_bullet entry
+                            ins entry_to_bullet entry
                     current += 1
                 file\close!
+                fd, name = posix.mkstemp "histofile.XXXXXX"
+                posix.write fd, table.concat output, "\n"
+                posix.write fd, "\n"
+                posix.close fd
+                os.rename name, args.file
+                os.remove name
             else
-                print HISTORY_TEMPLATE
+                with io.open args.file, "w"
+                    \write HISTORY_TEMPLATE
+                    \close!
         else
             fail "No entries"
             return posix.ENOENT
