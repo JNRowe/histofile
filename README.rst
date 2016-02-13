@@ -36,6 +36,13 @@ X, but it should work fine on other systems too.
 The excellent moonscript_ is required at build time, but it doesn't need to be
 installed to use ``histofile``.
 
+To run the tests you'll need busted_.  Once you have it installed you can
+run the tests with the following commands:
+
+.. code:: console
+
+    $ busted
+
 Contributors
 ------------
 
@@ -73,6 +80,7 @@ reproduce the problem, or even better a patch!
 .. _argparse: https://github.com/mpeterv/argparse
 .. _luaposix: http://wiki.alpinelinux.org/wiki/Luaposix
 .. _moonscript: https://github.com/leafo/moonscript/
+.. _busted: http://olivinelabs.com/busted/
 .. _issue: https://github.com/JNRowe/histofile/issues
 .. _mail: jnrowe@gmail.com
 
