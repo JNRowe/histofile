@@ -131,6 +131,9 @@ parse_args = (using nil) ->
                 => @match "^%d%d%d%d%-%d%d%-%d%d$"
             with \option "-o --output", "Output file name."
                 \argname "<file>"
+            \flag "-k --keep",
+                "Keep old data files after update (default when writing to stdout)."
+
     parser\parse!
 
 
@@ -216,6 +219,9 @@ commands =
                     posix.close fd
                     os.rename name, args.output or args.file
                     os.remove name
+                if not args.keep and args.output != "-"
+                    for entry in *entries
+                        os.remove entry
             else
                 if args.output == "-"
                     print HISTORY_TEMPLATE

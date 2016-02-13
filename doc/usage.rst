@@ -68,6 +68,10 @@ Commands
 
    Output file name.
 
+.. option:: -k, --keep
+
+   Keep old data files after update (default when writing to stdout).
+
 .. option:: --help
 
    Show help message and exit.

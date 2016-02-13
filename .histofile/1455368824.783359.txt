@@ -1,0 +1,1 @@
+History entries are removed when file is updated, use ``--keep`` to disable this.
