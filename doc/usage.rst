@@ -64,6 +64,10 @@ Commands
 
    Date of release, defaults to today.
 
+.. option:: -o <file>, --output <file>
+
+   Output file name.
+
 .. option:: --help
 
    Show help message and exit.

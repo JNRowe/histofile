@@ -60,6 +60,9 @@ Update history file.
 -d <date>, --date <date>
     Date of release, defaults to today.
 
+-o <file>, --output <file>
+    Output file name.
+
 --help
     Show help message and exit.
 

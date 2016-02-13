@@ -14,6 +14,8 @@ session:
     $ histofile list
     2016-02-10T12:03:00     Add support for cake baking
     2016-02-10T12:03:05     Removed support for window cleaning
+    $ histofile update --output - 0.2.0 NEWS.rst
+    <fancy new NEWS.rst>
     $ histofile update 0.2.0 NEWS.rst
     <NEWS.rst is updated in place>
 

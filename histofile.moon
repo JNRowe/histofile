@@ -129,6 +129,8 @@ parse_args = (using nil) ->
             \option "-d --date", "Date of release.",
                 os.date "%Y-%m-%d",
                 => @match "^%d%d%d%d%-%d%d%-%d%d$"
+            with \option "-o --output", "Output file name."
+                \argname "<file>"
     parser\parse!
 
 
@@ -205,16 +207,22 @@ commands =
                             ins entry_to_bullet entry
                     current += 1
                 file\close!
-                fd, name = posix.mkstemp "histofile.XXXXXX"
-                posix.write fd, table.concat output, "\n"
-                posix.write fd, "\n"
-                posix.close fd
-                os.rename name, args.file
-                os.remove name
+                if args.output == "-"
+                    print table.concat output, "\n"
+                else
+                    fd, name = posix.mkstemp "histofile.XXXXXX"
+                    posix.write fd, table.concat output, "\n"
+                    posix.write fd, "\n"
+                    posix.close fd
+                    os.rename name, args.output or args.file
+                    os.remove name
             else
-                with io.open args.file, "w"
-                    \write HISTORY_TEMPLATE
-                    \close!
+                if args.output == "-"
+                    print HISTORY_TEMPLATE
+                else
+                    with io.open args.output or args.file, "w"
+                        \write HISTORY_TEMPLATE
+                        \close!
         else
             fail "No entries"
             return posix.ENOENT
