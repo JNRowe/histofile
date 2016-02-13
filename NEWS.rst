@@ -3,6 +3,14 @@ User-visible changes
 
 .. contents::
 
+0.3.0 - 2016-02-13
+------------------
+
+* Writes update back to the given file by default.
+* Support for writing to different files with ``--output`` option.
+* History entries are removed when file is updated, use ``--keep`` to
+  disable this.
+
 0.2.0 - 2016-02-10
 ------------------
 
