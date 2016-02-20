@@ -25,6 +25,7 @@ Requirements
 
 * argparse_ v0.5.0 or newer
 * dkjson_
+* etlua_
 * luaposix_
 
 It should work with any version of ``lua`` v5.1 or newer, and also with
@@ -62,7 +63,7 @@ Bug reports
 Ideas
 '''''
 
-* <your name here>
+* Adam Baxter
 
 If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
 a mail_ and I'll update the list!
@@ -80,6 +81,7 @@ reproduce the problem, or even better a patch!
 .. _lua: http://www.lua.org/
 .. _argparse: https://github.com/mpeterv/argparse
 .. _dkjson: http://dkolf.de/src/dkjson-lua.fsl/
+.. _etlua: https://github.com/leafo/etlua
 .. _luaposix: http://wiki.alpinelinux.org/wiki/Luaposix
 .. _moonscript: https://github.com/leafo/moonscript/
 .. _busted: http://olivinelabs.com/busted/

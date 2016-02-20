@@ -68,6 +68,10 @@ Commands
 
    Output file name.
 
+.. option:: -t <name>, --template <name>
+
+   Template name, defaults to "default"
+
 .. option:: -k, --keep
 
    Keep old data files after update (default when writing to stdout).
