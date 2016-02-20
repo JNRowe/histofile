@@ -47,6 +47,8 @@ ANSI_COLOURS = {s, n+29 for n, s in ipairs {"black", "red", "green", "yellow",
 -- @param underline Use underline output
 -- @return Colourised output
 colourise = (text, colour=nil, bold=false, underline=false using nil) ->
+    unless posix.ttyname 1
+        return text
     s = ""
     if colour
         s ..= "\027[#{ANSI_COLOURS[colour]}m"
