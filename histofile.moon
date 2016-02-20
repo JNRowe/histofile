@@ -97,6 +97,20 @@ wrap_entry = (text, width=72, initial_indent="", subsequent_indent=initial_inden
             "\n#{subsequent_indent}#{word}"
 
 
+--- Format entry for output
+-- @param entry File to operate on
+-- @return Entry as bullet point
+entry_to_bullet = (entry using nil) ->
+    text = ""
+    if file = io.open entry
+        text ..= file\read("*a")
+        file\close!
+    else
+        fail "ick!  Read failure"
+        return posix.EIO
+    wrap_entry text, 72, "* ", "  "
+
+
 --- List valid history entries.
 -- @param path Path to search
 -- @return Matching entries
@@ -105,6 +119,78 @@ list_entries = (path using nil) ->
     if files
         table.sort files
     return files
+
+-- File mangling functionality {{{
+
+--- Find location to insert new entries
+-- @param file File to operate on
+-- @return Line to insert new entries
+find_marker = (file using nil) ->
+    curpos = file\seek!
+    file\seek "set"
+    marker = 0
+    for line in file\lines!
+        if line\find MARKER_STRING
+            break
+        marker += 1
+    file\seek "set", curpos
+    return marker
+
+
+--- Generate new NEWS file
+-- @param file File to operate on
+-- @param marker Line to insert new text at
+-- @param entries New entries to insert
+-- @return Lines comprising complete output
+build_file = (file, marker, entries, version, date using nil) ->
+    output = {}
+    ins = (text) -> table.insert output, text
+    current = 0
+    for line in file\lines!
+        if current != marker
+            ins line
+        else
+            ins line
+            ins ""
+            header = "#{version} - #{date}"
+            ins header
+            ins "-"\rep(#header)
+            ins ""
+            for entry in *entries
+                ins entry_to_bullet entry
+        current += 1
+    ins ""
+    return output
+
+
+--- Write output to file or stdout
+-- @param ofile Output file name
+-- @param output Strings, or table of strings, to write
+write_output = (ofile, output, use_temp=true) ->
+    text = if type(output) == "table"
+            table.concat(output, "\n")
+        else
+            output
+    if ofile == "-"
+        print text
+    else
+        with posix
+            fd, name = if use_temp
+                .mkstemp "histofile.XXXXXX"
+            else
+                .open ofile, posix.O_CREAT, "u+w"
+            unless fd
+                return posix.EIO, name
+            .write fd, text
+            .close fd
+            if use_temp
+                res, err = os.rename name, ofile
+                unless res
+                    return res, err
+                .chmod ofile, "u+w"
+                os.remove name
+    return 0
+-- }}}
 
 
 --- Parse command line arguments.
@@ -168,10 +254,7 @@ commands =
         if posix.access name
             fail "wowzers, time clash with µsec is some fast history making"
             return posix.EEXIST
-        if file = io.open name, "w"
-            file\write args.entry
-            file\close
-        else
+        unless write_output name, args.entry
             fail "ick!  Write failure"
             return posix.EIO
         return 0
@@ -180,57 +263,23 @@ commands =
     --- Update history file.
     -- @param args Parsed arguments
     update: (args using nil) ->
-        entry_to_bullet = (entry) ->
-            text = ""
-            file = io.open entry
-            text ..= file\read("*a")\gsub "\n$", ""
-            file\close!
-            return wrap_entry text, 72, "* ", "  "
-
         if entries = list_entries args.directory
             if file = io.open args.file
-                marker = 0
-                for line in file\lines!
-                    if line\find MARKER_STRING
-                        break
-                    marker += 1
-                file\seek "set"
-                current = 0
-                output = {}
-                ins = (text) -> table.insert output, text
-                for line in file\lines!
-                    if current != marker
-                        ins line
-                    else
-                        ins line
-                        ins ""
-                        header = "#{args.version} - #{args.date}"
-                        ins header
-                        ins "-"\rep(#header)
-                        ins ""
-                        for entry in *entries
-                            ins entry_to_bullet entry
-                    current += 1
+                marker = find_marker file
+                output = build_file file, marker, entries, args.version,
+                    args.date
                 file\close!
-                if args.output == "-"
-                    print table.concat output, "\n"
-                else
-                    fd, name = posix.mkstemp "histofile.XXXXXX"
-                    posix.write fd, table.concat output, "\n"
-                    posix.write fd, "\n"
-                    posix.close fd
-                    os.rename name, args.output or args.file
-                    os.remove name
+                unless write_output args.output or args.file, output
+                    fail "ick!  Write failure"
+                    return posix.EIO
                 if not args.keep and args.output != "-"
                     for entry in *entries
                         os.remove entry
             else
-                if args.output == "-"
-                    print HISTORY_TEMPLATE
-                else
-                    with io.open args.output or args.file, "w"
-                        \write HISTORY_TEMPLATE
-                        \close!
+                unless write_output args.output or args.file,
+                    HISTORY_TEMPLATE, false
+                    fail "ick!  Write failure"
+                    return posix.EIO
         else
             fail "No entries"
             return posix.ENOENT

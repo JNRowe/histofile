@@ -10,11 +10,48 @@ Utilities
 Convenience functions
 '''''''''''''''''''''
 
+.. function:: entry_to_bullet(entry)
+
+    Format entry for output
+
+    :param str entry: File to operate on
+    :rtype: str
+    :returns: Entry as bullet point
+
+.. function:: find_marker(file)
+
+    Find location to insert new entries
+
+    :param str file: File to operate on
+    :rtype: int
+    :returns: Line to insert new entries
+
 .. function:: list_entries(path)
 
     :param str path: Path to search
     :rtype: table
     :returns: Matching entries
+
+File creation
+'''''''''''''
+
+.. function:: build_file(file, marker, entries, version, date)
+
+    Generate new NEWS file
+
+    :param str file: File to operate on
+    :param int marker: Line to insert new text at
+    :param table entries: New entries to insert
+    :rtype: table
+    :returns: Lines comprising complete output
+
+.. function:: write_output(ofile, output, use_temp)
+
+    Write output to file or stdout
+
+    :param str ofile: Output file name
+    :type output: str or table
+    :param str output: Output to write
 
 Text formatting
 '''''''''''''''
