@@ -21,7 +21,13 @@ NAME = "histofile"
 DESCRIPTION = "Manage version history files"
 
 argparse = require "argparse"
+dkjson = require "dkjson"
 posix = require "posix"
+
+-- Use the large LPeg speedups for dkjson when LPeg is available.  Note, that
+-- it is unlikely to make enough difference to warrant a hard dependency on
+-- LPeg unless you have *thousands* of NEWS entries.
+pcall dkjson.use_lpeg
 
 VERSION = require "version"
 
@@ -97,27 +103,38 @@ wrap_entry = (text, width=72, initial_indent="", subsequent_indent=initial_inden
             "\n#{subsequent_indent}#{word}"
 
 
---- Format entry for output
--- @param entry File to operate on
--- @return Entry as bullet point
-entry_to_bullet = (entry using nil) ->
-    text = ""
-    if file = io.open entry
-        text ..= file\read("*a")
-        file\close!
-    else
-        fail "ick!  Read failure"
-        return posix.EIO
-    wrap_entry text, 72, "* ", "  "
-
-
 --- List valid history entries.
 -- @param path Path to search
 -- @return Matching entries
-list_entries = (path using nil) ->
-    files = posix.glob "#{path}/[0-9][0-9]*[.0-9][0-9]*.txt"
-    if files
-        table.sort files
+find_entries = (path using nil) ->
+    name_to_time = (f) ->
+        time = tonumber f\match "/(%d+%.?%d+)%."
+        os.date "%Y-%m-%dT%H:%M:%S", time
+    files = {}
+    if json_files = posix.glob "#{path}/[0-9][0-9]*[.0-9][0-9]*.json"
+        local entry
+        for f in *json_files
+            with io.open f
+                entry = dkjson.decode \read("*a")
+                \close!
+            entry.time = name_to_time f
+            entry._filename = f
+            table.insert files, entry
+    -- Old histofile <0.4 files
+    if txt_files = posix.glob "#{path}/[0-9][0-9]*[.0-9][0-9]*.txt"
+        warn "Support for old .txt histofile(<v0.4) files will be removed in v0.5"
+        for f in *txt_files
+            with io.open f
+                message = \read("*a")
+                \close!
+                table.insert files, {
+                    :message
+                    time: name_to_time f
+                    _filename: f
+                }
+    if #files == 0
+        return nil, "No entries found"
+    table.sort files, (e1, e2) -> e1.time < e2.time
     return files
 
 -- File mangling functionality {{{
@@ -156,8 +173,8 @@ build_file = (file, marker, entries, version, date using nil) ->
             ins header
             ins "-"\rep(#header)
             ins ""
-            for entry in *entries
-                ins entry_to_bullet entry
+            for _, entry in pairs entries
+                ins wrap_entry entry.message, 72, "* ", "  "
         current += 1
     ins ""
     return output
@@ -231,13 +248,9 @@ commands =
     --- List history entries.
     -- @param args Parsed arguments
     list: (args using nil) ->
-        if entries = list_entries args.directory
-            for entry in *entries
-                time = tonumber entry\match "#{args.directory}/(.*)%.txt"
-                with io.open entry
-                    print colourise(os.date("%Y-%m-%dT%H:%M:%S", time), "magenta"),
-                        \read("*a")
-                    \close!
+        if entries = find_entries args.directory
+            for name, entry in pairs entries
+                print colourise(entry.time, "magenta"), entry.message
         else
             fail "No entries"
             return posix.ENOENT
@@ -250,11 +263,14 @@ commands =
         unless posix.stat("#{args.directory}", "type") == "directory"
             posix.mkdir args.directory
         {:sec, :usec} = posix.gettimeofday!
-        name = "%s/%s.%06d.txt"\format args.directory, os.date("!%s", sec), usec
+        name = "%s/%s.%06d.json"\format args.directory, os.date("!%s", sec), usec
         if posix.access name
             fail "wowzers, time clash with µsec is some fast history making"
             return posix.EEXIST
-        unless write_output name, args.entry
+        unless write_output(name, dkjson.encode({
+                    message: args.entry,
+                }, indent: true
+            )) == 0
             fail "ick!  Write failure"
             return posix.EIO
         return 0
@@ -263,7 +279,7 @@ commands =
     --- Update history file.
     -- @param args Parsed arguments
     update: (args using nil) ->
-        if entries = list_entries args.directory
+        if entries = find_entries args.directory
             if file = io.open args.file
                 marker = find_marker file
                 output = build_file file, marker, entries, args.version,
@@ -274,7 +290,7 @@ commands =
                     return posix.EIO
                 if not args.keep and args.output != "-"
                     for entry in *entries
-                        os.remove entry
+                        os.remove entry._filename
             else
                 unless write_output args.output or args.file,
                     HISTORY_TEMPLATE, false
@@ -300,4 +316,4 @@ main = (using nil) ->
 if not package.loaded["busted"]
     main!
 else
-    :list_entries, :wrap_entry
+    :find_entries, :wrap_entry
