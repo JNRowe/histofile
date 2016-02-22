@@ -3,6 +3,14 @@ User-visible changes
 
 .. contents::
 
+0.4.0 - 2016-02-22
+------------------
+
+* Support for user templated output.
+* Now requires etlua.
+* Data files now use JSON.
+* dkjson is now required.
+
 0.3.0 - 2016-02-13
 ------------------
 
