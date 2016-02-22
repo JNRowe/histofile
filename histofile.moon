@@ -297,4 +297,7 @@ main = (using nil) ->
 
     os.exit commands[args.command] args
 
-main!
+if not package.loaded["busted"]
+    main!
+else
+    :list_entries, :wrap_entry
