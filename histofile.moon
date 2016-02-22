@@ -22,6 +22,7 @@ DESCRIPTION = "Manage version history files"
 
 argparse = require "argparse"
 dkjson = require "dkjson"
+etlua = require "etlua"
 posix = require "posix"
 
 -- Use the large LPeg speedups for dkjson when LPeg is available.  Note, that
@@ -30,13 +31,6 @@ posix = require "posix"
 pcall dkjson.use_lpeg
 
 VERSION = require "version"
-
-HISTORY_TEMPLATE = "User-visible changes
-====================
-
-.. contents::
-"
-MARKER_STRING = "^%.%. contents::"
 
 
 -- Coloured output support {{{
@@ -139,45 +133,16 @@ find_entries = (path using nil) ->
 
 -- File mangling functionality {{{
 
---- Find location to insert new entries
--- @param file File to operate on
--- @return Line to insert new entries
-find_marker = (file using nil) ->
-    curpos = file\seek!
-    file\seek "set"
-    marker = 0
-    for line in file\lines!
-        if line\find MARKER_STRING
-            break
-        marker += 1
-    file\seek "set", curpos
-    return marker
-
-
---- Generate new NEWS file
--- @param file File to operate on
--- @param marker Line to insert new text at
--- @param entries New entries to insert
--- @return Lines comprising complete output
-build_file = (file, marker, entries, version, date using nil) ->
-    output = {}
-    ins = (text) -> table.insert output, text
-    current = 0
-    for line in file\lines!
-        if current != marker
-            ins line
-        else
-            ins line
-            ins ""
-            header = "#{version} - #{date}"
-            ins header
-            ins "-"\rep(#header)
-            ins ""
-            for _, entry in pairs entries
-                ins wrap_entry entry.message, 72, "* ", "  "
-        current += 1
-    ins ""
-    return output
+--- Find old NEWS entries
+-- @param data Data to operate on
+-- @param marker_string Match location to find old entries
+-- @return Old entries
+find_old_entries = (data, marker_string using nil) ->
+    _, end_ = data\find marker_string
+    unless end_
+        return nil, "marker not found in file"
+    old_entries = data\sub end_ + 2, -2
+    return old_entries
 
 
 --- Write output to file or stdout
@@ -189,7 +154,7 @@ write_output = (ofile, output, use_temp=true) ->
         else
             output
     if ofile == "-"
-        print text
+        io.stdout\write text
     else
         with posix
             fd, name = if use_temp
@@ -208,6 +173,30 @@ write_output = (ofile, output, use_temp=true) ->
                 os.remove name
     return 0
 -- }}}
+
+
+--- Load template data
+-- @param name Template name to load
+-- @return Template data
+load_templata_data = (name) ->
+    unless io.open "templates/#{name}"
+        return nil, "Invalid template name"
+    local marker_string
+    if f = io.open "templates/#{name}/marker"
+        marker_string = f\read!
+        f\close!
+    else
+        return nil, "Invalid template marker file"
+    local tmpl
+    if f = io.open "templates/#{name}/main.etlua"
+        tmpl, err = etlua.compile f\read("*a")
+        f\close!
+    else
+        return nil, "Invalid main template"
+    {
+        :marker_string
+        render: tmpl
+    }
 
 
 --- Parse command line arguments.
@@ -236,6 +225,10 @@ parse_args = (using nil) ->
                 => @match "^%d%d%d%d%-%d%d%-%d%d$"
             with \option "-o --output", "Output file name."
                 \argname "<file>"
+            with \option "-t --template", "Template name.",
+                    "default",
+                    load_templata_data
+                \argname "<name>"
             \flag "-k --keep",
                 "Keep old data files after update (default when writing to stdout)."
 
@@ -279,23 +272,29 @@ commands =
     --- Update history file.
     -- @param args Parsed arguments
     update: (args using nil) ->
+        template_vars =
+            -- Template data
+            date: args.date
+            version: args.version
+
+            -- Support functions for templates
+            :wrap_entry
         if entries = find_entries args.directory
+            template_vars.entries = entries
             if file = io.open args.file
-                marker = find_marker file
-                output = build_file file, marker, entries, args.version,
-                    args.date
+                template_vars.old_entries = find_old_entries file\read("*a"),
+                    args.template.marker_string
+                unless template_vars.old_entries
+                    fail "Marker not found in file!  Incorrect template?"
+                    return posix.ENXIO
                 file\close!
-                unless write_output args.output or args.file, output
-                    fail "ick!  Write failure"
-                    return posix.EIO
-                if not args.keep and args.output != "-"
-                    for entry in *entries
-                        os.remove entry._filename
-            else
-                unless write_output args.output or args.file,
-                    HISTORY_TEMPLATE, false
-                    fail "ick!  Write failure"
-                    return posix.EIO
+            output = args.template.render template_vars
+            unless write_output(args.output or args.file, output) == 0
+                fail "ick!  Write failure"
+                return posix.EIO
+            if not args.keep and args.output != "-"
+                for entry in *entries
+                    os.remove entry._filename
         else
             fail "No entries"
             return posix.ENOENT

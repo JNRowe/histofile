@@ -63,6 +63,9 @@ Update history file.
 -o <file>, --output <file>
     Output file name.
 
+-t <name>, --template <name>
+    Template name, defaults to "default"
+
 -k, --keep
     Keep old data files after update (default when writing to stdout).
 

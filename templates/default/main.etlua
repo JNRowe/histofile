@@ -1,0 +1,12 @@
+User-visible changes
+====================
+
+.. contents::
+
+<%- version -%> - <%- date %>
+<%- ("-"):rep(#version + #date + 3) %>
+
+<% for _, entry in pairs(entries) do -%>
+<%- wrap_entry(entry.message, 72, "* ", "  ") %>
+<% end -%>
+<% if old_entries then %><%- old_entries -%><% end %>
