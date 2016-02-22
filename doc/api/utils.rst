@@ -7,16 +7,14 @@ Utilities
   ``histofile``, and can be skipped if you are simply using the tool from the
   command line.
 
-Convenience functions
-'''''''''''''''''''''
+Data loading
+''''''''''''
 
-.. function:: entry_to_bullet(entry)
+.. function:: find_entries(path)
 
-    Format entry for output
-
-    :param str entry: File to operate on
-    :rtype: str
-    :returns: Entry as bullet point
+    :param str path: Path to search
+    :rtype: table
+    :returns: Matching entries
 
 .. function:: find_marker(file)
 
@@ -25,12 +23,6 @@ Convenience functions
     :param str file: File to operate on
     :rtype: int
     :returns: Line to insert new entries
-
-.. function:: list_entries(path)
-
-    :param str path: Path to search
-    :rtype: table
-    :returns: Matching entries
 
 File creation
 '''''''''''''
