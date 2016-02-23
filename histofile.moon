@@ -148,7 +148,7 @@ find_old_entries = (data, marker_string using nil) ->
 --- Write output to file or stdout
 -- @param ofile Output file name
 -- @param output Strings, or table of strings, to write
-write_output = (ofile, output, use_temp=true) ->
+write_output = (ofile, output) ->
     text = if type(output) == "table"
             table.concat(output, "\n")
         else
@@ -157,20 +157,16 @@ write_output = (ofile, output, use_temp=true) ->
         io.stdout\write text
     else
         with posix
-            fd, name = if use_temp
-                .mkstemp "histofile.XXXXXX"
-            else
-                .open ofile, posix.O_CREAT, "u+w"
+            fd, name = .mkstemp "histofile.XXXXXX"
             unless fd
                 return posix.EIO, name
             .write fd, text
             .close fd
-            if use_temp
-                res, err = os.rename name, ofile
-                unless res
-                    return res, err
-                .chmod ofile, "u+w"
-                os.remove name
+            res, err = os.rename name, ofile
+            unless res
+                return res, err
+            .chmod ofile, "u+w"
+            os.remove name
     return 0
 -- }}}
 

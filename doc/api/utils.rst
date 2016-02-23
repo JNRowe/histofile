@@ -37,7 +37,7 @@ File creation
     :rtype: table
     :returns: Lines comprising complete output
 
-.. function:: write_output(ofile, output, use_temp)
+.. function:: write_output(ofile, output)
 
     Write output to file or stdout
 
