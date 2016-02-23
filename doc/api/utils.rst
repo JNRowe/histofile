@@ -48,14 +48,15 @@ File creation
 Text formatting
 '''''''''''''''
 
-.. function:: colourise(text, colour, bold, underline)
+.. function:: colourise(text, colour, attrs, force)
 
     Generate coloured output for the terminal.
 
     :param str text: Text to colourise
     :param str colour: Colour to use
-    :param bool bold: Use bold output
-    :param bool underline: Use underline output
+    :param table attrs: Whether to produce bold or underlined output
+    :param bool force: Colourise regardless of whether ``stdout`` is connected
+        to a terminal
     :rtype: str
     :returns: Colourised output
 

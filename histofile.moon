@@ -48,15 +48,17 @@ ANSI_COLOURS = {s, "\027[#{n+29}m" for n, s in ipairs _colour_order when s}
 -- @param bold Use bold output
 -- @param underline Use underline output
 -- @return Colourised output
-colourise = (text, colour=nil, bold=false, underline=false using nil) ->
-    unless posix.ttyname 1
+colourise = (text, colour=nil, attrib={bold: false, underline: false}, force=false using nil) ->
+    if not force and not posix.ttyname 1
+        return text
+    unless colour or attrib.bold or attrib.underline
         return text
     s = ""
     if colour
         s ..= ANSI_COLOURS[colour]
-    if bold
+    if attrib.bold
         s ..= "\027[1m"
-    if underline
+    if attrib.underline
         s ..= "\027[4m"
     "#{s}#{text}\027[0m"
 
@@ -66,7 +68,7 @@ colourise = (text, colour=nil, bold=false, underline=false using nil) ->
 -- @param bold Use bold output
 -- @return Prettified success message
 success = (text, bold=true) ->
-    print colourise "✔ #{text}", "green", bold
+    print colourise "✔ #{text}", "green", :bold
 
 
 --- Standardised failure message.
@@ -74,7 +76,7 @@ success = (text, bold=true) ->
 -- @param bold Use bold output
 -- @return Prettified failure message
 fail = (text, bold=true) ->
-    io.stderr\write colourise("✘ #{text}", "red", bold) .. "\n"
+    io.stderr\write colourise("✘ #{text}", "red", :bold) .. "\n"
 
 
 --- Standardised warning message.
@@ -82,7 +84,7 @@ fail = (text, bold=true) ->
 -- @param bold Use bold output
 -- @return Prettified warning message
 warn = (text, bold=true) ->
-    io.stderr\write colourise("⚠ #{text}", "yellow", bold) .. "\n"
+    io.stderr\write colourise("⚠ #{text}", "yellow", :bold) .. "\n"
 -- }}}
 
 
@@ -318,4 +320,4 @@ main = (using nil) ->
 if not package.loaded["busted"]
     main!
 else
-    :find_entries, :wrap_entry
+    :colourise, :find_entries, :wrap_entry
