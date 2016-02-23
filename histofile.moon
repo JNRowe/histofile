@@ -84,6 +84,8 @@ warn = (text, bold=true) ->
 -- }}}
 
 
+-- Entry mangling functionality {{{
+
 --- Wrap text for output
 -- @param text Text to format
 -- @param width Width of formatted text
@@ -130,6 +132,7 @@ find_entries = (path using nil) ->
         return nil, "No entries found"
     table.sort files, (e1, e2) -> e1.time < e2.time
     return files
+-- }}}
 
 -- File mangling functionality {{{
 
@@ -170,6 +173,7 @@ write_output = (ofile, output) ->
     return 0
 -- }}}
 
+-- {{{ Command line support
 
 --- Load template data
 -- @param name Template name to load
@@ -229,7 +233,7 @@ parse_args = (using nil) ->
                 "Keep old data files after update (default when writing to stdout)."
 
     parser\parse!
-
+-- }}}
 
 -- Main commands {{{
 
