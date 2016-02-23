@@ -21,3 +21,34 @@ session:
 
 Help on individual subcommands is available via ``histofile <subcommand>
 --help`` or in the :doc:`usage` document.
+
+Configuration
+-------------
+
+``histofile`` ships with what the maintainer hopes are reasonable defaults, but
+can be configured in various ways.
+
+``histofile`` will read argument defaults from :file:`.histofile.json` or the
+file pointed to by :envvar:`HISTOFILE_CONFIG`.  The file should be a valid JSON
+document, and can contain the following items:
+
++---------------+------+------------------------------------------------------+
+| Variable      | Type | Description                                          |
++===============+======+======================================================+
+| directory     | str  | The directory to read and write NEWS entries to      |
++---------------+------+------------------------------------------------------+
+| filename      | str  | The filename to use as the NEWS file                 |
++---------------+------+------------------------------------------------------+
+| keep          | bool | Whether to keep the entries after writing updates    |
++---------------+------+------------------------------------------------------+
+| template_name | str  | The template set used to render the NEWS file        |
++---------------+------+------------------------------------------------------+
+
+For example, a configuration file could contain the following:
+
+.. code-block:: json
+
+    {
+        "directory": "/out/of/tree/storage",
+        "filename": "awful_name.md"
+    }

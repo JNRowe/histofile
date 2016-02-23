@@ -24,6 +24,13 @@ Data loading
     :rtype: int
     :returns: Line to insert new entries
 
+.. function:: read_config()
+
+    Read repository configuration.
+
+    :rtype: table
+    :returns: Configuration data
+
 File creation
 '''''''''''''
 

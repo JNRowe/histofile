@@ -202,9 +202,20 @@ load_templata_data = (name) ->
     }
 
 
+--- Read repository configuration.
+-- @return Configuration data
+read_config = (using nil) ->
+    local conf
+    if file = io.open os.getenv("HISTOFILE_CONFIG") or ".histofile.json"
+        conf = dkjson.decode file\read("*a")
+        file\close!
+    return conf
+
+
 --- Parse command line arguments.
+-- @param conf Configuration defaults to apply
 -- @return Processed command line arguments
-parse_args = (using nil) ->
+parse_args = (conf using nil) ->
     parser = with argparse NAME, DESCRIPTION,
             "Please report bugs at https://github.com/JNRowe/#{NAME}/issues"
 
@@ -213,7 +224,7 @@ parse_args = (using nil) ->
                 print "⛬ #{NAME}, version #{VERSION.dotted}"
                 os.exit 0
         \option "-d --directory", "Location to store history entries.",
-            ".histofile"
+            conf and conf.directory or ".histofile"
         \command_target "command"
         \command "list", "List history entries."
         with \command "new", "Add new history entry."
@@ -222,18 +233,19 @@ parse_args = (using nil) ->
             with \argument "version", "Version number of release."
                 \convert => @match "^%d+%.%d+%.%d+$"
             \argument "file", "Location of history file.",
-                "NEWS.rst"
+                conf and conf.filename or "NEWS.rst"
             \option "-d --date", "Date of release.",
                 os.date "%Y-%m-%d",
                 => @match "^%d%d%d%d%-%d%d%-%d%d$"
             with \option "-o --output", "Output file name."
                 \argname "<file>"
             with \option "-t --template", "Template name.",
-                    "default",
+                    conf and conf.template_name or "default",
                     load_templata_data
                 \argname "<name>"
             \flag "-k --keep",
-                "Keep old data files after update (default when writing to stdout)."
+                "Keep old data files after update (default when writing to stdout).",
+                conf and conf.keep or false
 
     parser\parse!
 -- }}}
@@ -311,7 +323,8 @@ main = (using nil) ->
         -- Make C-c less ugly
         os.exit 255
 
-    args = parse_args!
+    conf = read_config!
+    args = parse_args conf
 
     os.exit commands[args.command] args
 
