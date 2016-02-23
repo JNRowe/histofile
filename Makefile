@@ -40,7 +40,7 @@ clean:
 display_sources:
 	@echo $(realpath $(SOURCES))
 
-lint:
+lint: lint_config.lua
 	$(info - Linting moonscript files)
 	$(MOONC) -l $(SOURCES)
 

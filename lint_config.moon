@@ -1,0 +1,24 @@
+{
+    whitelist_globals:
+        "histofile.moon": {
+            "ANSI_COLOURS",
+            "DESCRIPTION",
+            "NAME",
+            "VERSION",
+            "argparse",
+            "colourise",
+            "commands",
+            "dkjson",
+            "fail",
+            "find_entries",
+            "find_old_entries",
+            "load_templata_data",
+            "parse_args",
+            "posix",
+            "subsequent_indent",
+            "warn",
+            "width",
+            "wrap_entry",
+            "write_output",
+        }
+}
