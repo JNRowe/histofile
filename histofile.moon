@@ -320,4 +320,4 @@ main = (using nil) ->
 if not package.loaded["busted"]
     main!
 else
-    :colourise, :find_entries, :wrap_entry
+    :colourise, :find_entries, :wrap_entry, :write_output
