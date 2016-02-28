@@ -64,6 +64,7 @@ Ideas
 '''''
 
 * Adam Baxter
+* Michał Fitz
 
 If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
 a mail_ and I'll update the list!
