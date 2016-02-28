@@ -1,5 +1,5 @@
-histofile - Manage version history files
-========================================
+⛬ ``histofile`` - Manage version history files
+===============================================
 
 ``histofile`` is a small tool to aid in the management of ``NEWS`` files for
 a project.

@@ -1,5 +1,8 @@
-``histofile``
-=============
+⛬ ``histofile``
+================
+
+.. image:: ../extra/histofile.*
+   :align: right
 
 ``histofile`` is a small tool to aid in the management of ``NEWS`` files for
 a project.

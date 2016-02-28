@@ -207,7 +207,7 @@ parse_args = (using nil) ->
 
         with \flag "-v --version", "Show the version and exit."
             \action ->
-                print "#{NAME}, version #{VERSION.dotted}"
+                print "⛬ #{NAME}, version #{VERSION.dotted}"
                 os.exit 0
         \option "-d --directory", "Location to store history entries.",
             ".histofile"
