@@ -37,9 +37,12 @@ source_suffix = ".rst"
 project = "histofile"
 copyright = u"Copyright © 2016  James Rowe <jnrowe@gmail.com>"
 
-# Use versionah
-version = "0.2"
-release = "0.2.0"
+try:
+    version_str = check_output(["versionah", "display", "../version.moon"])
+except CalledProcessError:
+    version_str = "x.x.x"
+version = version_str.rsplit(".", 1)[0]
+release = version_str
 
 pygments_style = "sphinx"
 try:
