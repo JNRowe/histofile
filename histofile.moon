@@ -44,12 +44,12 @@ ANSI_FG_COLOURS = {s, "\027[#{n+29}m" for n, s in ipairs _colour_order when s}
 ANSI_BG_COLOURS = {s, "\027[#{n+39}m" for n, s in ipairs _colour_order when s}
 
 
---- Generate coloured output for the terminal.
--- @param text Text to colourise
+--- Generate stylised output for the terminal.
+-- @param text Text to format
 -- @param colour Colour to use
 -- @param attrib Formatting attributes to apply
--- @return Colourised output
-colourise = (text, colour=nil, attrib={bold: false, underline: false}, force=false using nil) ->
+-- @return Stylised output
+stylise = (text, colour=nil, attrib={bold: false, underline: false}, force=false using nil) ->
     if not force and not posix.ttyname 1
         return text
     unless colour or attrib.bold or attrib.underline
@@ -65,24 +65,24 @@ colourise = (text, colour=nil, attrib={bold: false, underline: false}, force=fal
 
 
 --- Standardised success message.
--- @param text Text to colourise
+-- @param text Text to stylise
 -- @param bold Use bold output
 success = (text, bold=true) ->
-    print colourise "✔ #{text}", "green", :bold
+    print stylise "✔ #{text}", "green", :bold
 
 
 --- Standardised failure message.
--- @param text Text to colourise
+-- @param text Text to stylise
 -- @param bold Use bold output
 fail = (text, bold=true) ->
-    io.stderr\write colourise("✘ #{text}", "red", :bold) .. "\n"
+    io.stderr\write stylise("✘ #{text}", "red", :bold) .. "\n"
 
 
 --- Standardised warning message.
--- @param text Text to colourise
+-- @param text Text to stylise
 -- @param bold Use bold output
 warn = (text, bold=true) ->
-    io.stderr\write colourise("⚠ #{text}", "yellow", :bold) .. "\n"
+    io.stderr\write stylise("⚠ #{text}", "yellow", :bold) .. "\n"
 -- }}}
 
 
@@ -251,7 +251,7 @@ commands =
     list: (args using nil) ->
         if entries = find_entries args.directory
             for name, entry in pairs entries
-                print colourise(entry.time, "magenta"), entry.message
+                print stylise(entry.time, "magenta"), entry.message
         else
             fail "No entries"
             return posix.ENOENT
@@ -297,7 +297,7 @@ commands =
             bold: "\027[1m"
             underline: "\027[4m"
             reset: "\027[0m"
-            :colourise
+            :stylise
 
             form_feed: "\012"
 
@@ -339,4 +339,4 @@ main = (using nil) ->
 if not package.loaded["busted"]
     main!
 else
-    :colourise, :find_entries, :wrap_entry, :write_output
+    :find_entries, :stylise, :wrap_entry, :write_output
