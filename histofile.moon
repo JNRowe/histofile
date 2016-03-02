@@ -33,7 +33,7 @@ pcall dkjson.use_lpeg
 VERSION = require "version"
 
 
--- Coloured output support {{{
+-- [utils] Stylised output support {{{
 
 _colour_order = {"black", "red", "green", "yellow", "blue", "magenta", "cyan",
                  "white", nil, "default"}
@@ -86,7 +86,7 @@ warn = (text, bold=true) ->
 -- }}}
 
 
--- Entry mangling functionality {{{
+-- [entries] Entry mangling functionality {{{
 
 --- Wrap text for output.
 -- @param text Text to format
@@ -128,7 +128,7 @@ find_entries = (path using nil) ->
     return files
 -- }}}
 
--- File mangling functionality {{{
+-- [file_mangle] File mangling functionality {{{
 
 --- Find old NEWS entries.
 -- @param data Data to operate on
@@ -168,7 +168,7 @@ write_output = (file, content) ->
     return 0
 -- }}}
 
--- {{{ Command line support
+-- [commandline] Command line support {{{
 
 --- Load template data.
 -- @param name Template name to load
@@ -242,7 +242,7 @@ parse_args = (conf using nil) ->
     parser\parse!
 -- }}}
 
--- Main commands {{{
+-- [main] Main commands {{{
 
 commands =
     --- List history entries.
@@ -282,7 +282,7 @@ commands =
     -- @param args Parsed arguments
     -- @return Exit code suitable for shell
     update: (args using nil) ->
-        --- Template variables and functions
+        --- [template] Template variables and functions
         template_vars =
             -- Template data
             date: args.date
@@ -321,7 +321,6 @@ commands =
             fail "No entries"
             return posix.ENOENT
         return 0
--- }}}
 
 
 --- Main entry point.
@@ -335,6 +334,8 @@ main = (using nil) ->
     args = parse_args conf
 
     os.exit commands[args.command] args
+-- }}}
+
 
 if not package.loaded["busted"]
     main!
