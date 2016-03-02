@@ -3,104 +3,48 @@ Utilities
 
 .. note::
 
-  The documentation in this section is aimed at people wishing to contribute to
-  ``histofile``, and can be skipped if you are simply using the tool from the
-  command line.
+    The documentation in this section is aimed at people wishing to contribute
+    to ``histofile``, and can be skipped if you are simply using the tool from
+    the command line.
 
-Data loading
-''''''''''''
+.. data:: ANSI_FG_COLOURS = {…}
 
-.. function:: find_entries(path)
+    Terminal escapes for colours.
 
-    :param str path: Path to search
-    :rtype: table
-    :returns: Matching entries
+    Foreground colour control codes
 
-.. function:: find_marker(file)
+.. data:: ANSI_BG_COLOURS = {…}
 
-    Find location to insert new entries
+    Terminal escapes for colours.
 
-    :param str file: File to operate on
-    :rtype: int
-    :returns: Line to insert new entries
+    Background colour control codes
 
-.. function:: read_config()
+.. function:: stylise(text, colour=nil, attrib={bold: false, underline: false}, force=false)
 
-    Read repository configuration.
+    Generate stylised output for the terminal.
 
-    :rtype: table
-    :returns: Configuration data
+    :param text: Text to format
+    :param colour: Colour to use
+    :param attrib: Formatting attributes to apply
+    :returns: Stylised output
 
-File creation
-'''''''''''''
-
-.. function:: build_file(file, marker, entries, version, date)
-
-    Generate new NEWS file
-
-    :param str file: File to operate on
-    :param int marker: Line to insert new text at
-    :param table entries: New entries to insert
-    :rtype: table
-    :returns: Lines comprising complete output
-
-.. function:: write_output(ofile, output)
-
-    Write output to file or stdout
-
-    :param str ofile: Output file name
-    :type output: str or table
-    :param str output: Output to write
-
-Text formatting
-'''''''''''''''
-
-.. function:: colourise(text, colour, attrs, force)
-
-    Generate coloured output for the terminal.
-
-    :param str text: Text to colourise
-    :param str colour: Colour to use
-    :param table attrs: Whether to produce bold or underlined output
-    :param bool force: Colourise regardless of whether ``stdout`` is connected
-        to a terminal
-    :rtype: str
-    :returns: Colourised output
-
-.. function:: success(text, bold)
+.. function:: success(text, bold=true)
 
     Standardised success message.
 
-    :param str text: Text to colourise
-    :param bool bold: Use bold output
-    :rtype: str
-    :returns: Prettified success message
+    :param text: Text to stylise
+    :param bold: Use bold output
 
-.. function:: fail(text, bold)
+.. function:: fail(text, bold=true)
 
     Standardised failure message.
 
-    :param str text: Text to colourise
-    :param bool bold: Use bold output
-    :rtype: str
-    :returns: Prettified failure message
+    :param text: Text to stylise
+    :param bold: Use bold output
 
-.. function:: warn(text, bold)
+.. function:: warn(text, bold=true)
 
     Standardised warning message.
 
-    :param str text: Text to colourise
-    :param bool bold: Use bold output
-    :rtype: str
-    :returns: Prettified warning message
-
-.. function:: wrap_entry(text, width, initial_indent, subsequent_indent)
-
-    Wrap text for output
-
-    :param str text: Text to format
-    :param int: Width of formatted text
-    :param str initial_indent: String to indent first line with
-    :param str subsequent_indent: String to indent all but the first line with
-    :rtype: str
-    :returns: Line wrapped text
+    :param text: Text to stylise
+    :param bold: Use bold output
