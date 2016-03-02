@@ -151,14 +151,15 @@ find_old_entries = (data, marker_string using nil) ->
 
 
 --- Write output to file or stdout
--- @param ofile Output file name
--- @param output Strings, or table of strings, to write
-write_output = (ofile, output) ->
-    text = if type(output) == "table"
-            table.concat(output, "\n")
+-- @param file Output file name
+-- @param content Strings, or table of strings, to write
+-- @return 0 on success, (errno, reason) on failure
+write_output = (file, content) ->
+    text = if type(content) == "table"
+            table.concat(content, "\n")
         else
-            output
-    if ofile == "-"
+            content
+    if file == "-"
         io.stdout\write text
     else
         with posix
@@ -167,10 +168,10 @@ write_output = (ofile, output) ->
                 return posix.EIO, name
             .write fd, text
             .close fd
-            res, err = os.rename name, ofile
+            res, err = os.rename name, file
             unless res
                 return res, err
-            .chmod ofile, "u+w"
+            .chmod file, "u+w"
             os.remove name
     return 0
 -- }}}
