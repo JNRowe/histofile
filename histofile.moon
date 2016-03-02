@@ -35,9 +35,11 @@ VERSION = require "version"
 
 -- Coloured output support {{{
 
+_colour_order = {"black", "red", "green", "yellow", "blue", "magenta", "cyan",
+                 "white", nil, "default"}
 --- Terminal escapes for colours
-ANSI_COLOURS = {s, n+29 for n, s in ipairs {"black", "red", "green", "yellow",
-                                            "blue", "magenta", "cyan", "white"}}
+-- Foreground colour control codes
+ANSI_COLOURS = {s, "\027[#{n+29}m" for n, s in ipairs _colour_order when s}
 
 
 --- Generate coloured output for the terminal.
@@ -51,7 +53,7 @@ colourise = (text, colour=nil, bold=false, underline=false using nil) ->
         return text
     s = ""
     if colour
-        s ..= "\027[#{ANSI_COLOURS[colour]}m"
+        s ..= ANSI_COLOURS[colour]
     if bold
         s ..= "\027[1m"
     if underline
