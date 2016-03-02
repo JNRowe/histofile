@@ -41,13 +41,33 @@ It is provided with the following data:
 |             | argument.                                                     |
 +-------------+---------------------------------------------------------------+
 
-And the following functions:
+The following formatting functions are provided for convenience:
 
 +---------------------+-------------------------------------------------------+
 | Function            | Description                                           |
 +=====================+=======================================================+
+| :func:`colourise`   | Basic terminal formatting support                     |
++---------------------+-------------------------------------------------------+
 | :func:`wrap_entry`  | A simple line wrapper for text inputs                 |
 +---------------------+-------------------------------------------------------+
+
+Along with the following variables for formatting output:
+
++-----------+----------------------+------------------------------------------+
+| Variable  | Type                 | Description                              |
++===========+======================+==========================================+
+| bg        | string indexed table | Colours to set terminal background.      |
++-----------+----------------------+------------------------------------------+
+| bold      | string               | Set terminal to bold                     |
++-----------+----------------------+------------------------------------------+
+| fg        | string indexed table | Colours to set terminal foreground.      |
++-----------+----------------------+------------------------------------------+
+| form_feed | string               | Force a form feed                        |
++-----------+----------------------+------------------------------------------+
+| reset     | string               | Reset terminal formatting                |
++-----------+----------------------+------------------------------------------+
+| underline | string               | et terminal to underline                 |
++-----------+----------------------+------------------------------------------+
 
 .. _etlua: https://github.com/leafo/etlua
 .. _lua: http://www.lua.org/

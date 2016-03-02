@@ -6,7 +6,8 @@
             "posix",
         },
         "histofile.moon": {
-            "ANSI_COLOURS",
+            "ANSI_BG_COLOURS",
+            "ANSI_FG_COLOURS",
             "DESCRIPTION",
             "NAME",
             "VERSION",

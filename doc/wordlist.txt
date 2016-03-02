@@ -1,4 +1,6 @@
+bg
 diffs
+fg
 filename
 histofile
 ish
