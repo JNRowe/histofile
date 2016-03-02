@@ -37,7 +37,7 @@ VERSION = require "version"
 
 _colour_order = {"black", "red", "green", "yellow", "blue", "magenta", "cyan",
                  "white", nil, "default"}
---- Terminal escapes for colours
+--- Terminal escapes for colours.
 -- Foreground colour control codes
 ANSI_FG_COLOURS = {s, "\027[#{n+29}m" for n, s in ipairs _colour_order when s}
 -- Background colour control codes
@@ -47,8 +47,7 @@ ANSI_BG_COLOURS = {s, "\027[#{n+39}m" for n, s in ipairs _colour_order when s}
 --- Generate coloured output for the terminal.
 -- @param text Text to colourise
 -- @param colour Colour to use
--- @param bold Use bold output
--- @param underline Use underline output
+-- @param attrib Formatting attributes to apply
 -- @return Colourised output
 colourise = (text, colour=nil, attrib={bold: false, underline: false}, force=false using nil) ->
     if not force and not posix.ttyname 1
@@ -68,7 +67,6 @@ colourise = (text, colour=nil, attrib={bold: false, underline: false}, force=fal
 --- Standardised success message.
 -- @param text Text to colourise
 -- @param bold Use bold output
--- @return Prettified success message
 success = (text, bold=true) ->
     print colourise "✔ #{text}", "green", :bold
 
@@ -76,7 +74,6 @@ success = (text, bold=true) ->
 --- Standardised failure message.
 -- @param text Text to colourise
 -- @param bold Use bold output
--- @return Prettified failure message
 fail = (text, bold=true) ->
     io.stderr\write colourise("✘ #{text}", "red", :bold) .. "\n"
 
@@ -84,7 +81,6 @@ fail = (text, bold=true) ->
 --- Standardised warning message.
 -- @param text Text to colourise
 -- @param bold Use bold output
--- @return Prettified warning message
 warn = (text, bold=true) ->
     io.stderr\write colourise("⚠ #{text}", "yellow", :bold) .. "\n"
 -- }}}
@@ -92,11 +88,12 @@ warn = (text, bold=true) ->
 
 -- Entry mangling functionality {{{
 
---- Wrap text for output
+--- Wrap text for output.
 -- @param text Text to format
 -- @param width Width of formatted text
--- @initial_indent String to indent first line with
--- @subsequent_indent String to indent all but the first line with
+-- @param initial_indent String to indent first line with
+-- @param subsequent_indent String to indent all but the first line with
+-- @return Wrapped text
 wrap_entry = (text, width=72, initial_indent="", subsequent_indent=initial_indent using nil) ->
     pos = 1 - #initial_indent
     initial_indent .. text\gsub "(%s+)()(%S+)()", (_, start, word, _end using pos) ->
@@ -109,6 +106,9 @@ wrap_entry = (text, width=72, initial_indent="", subsequent_indent=initial_inden
 -- @param path Path to search
 -- @return Matching entries
 find_entries = (path using nil) ->
+    --- Read time from filename
+    -- @param f Filename to scan
+    -- @return ISO-8601 formatted date string
     name_to_time = (f) ->
         time = tonumber f\match "/(%d+%.?%d+)%."
         os.date "%Y-%m-%dT%H:%M:%S", time
@@ -130,7 +130,7 @@ find_entries = (path using nil) ->
 
 -- File mangling functionality {{{
 
---- Find old NEWS entries
+--- Find old NEWS entries.
 -- @param data Data to operate on
 -- @param marker_string Match location to find old entries
 -- @return Old entries
@@ -142,7 +142,7 @@ find_old_entries = (data, marker_string using nil) ->
     return old_entries
 
 
---- Write output to file or stdout
+--- Write output to file or stdout.
 -- @param file Output file name
 -- @param content Strings, or table of strings, to write
 -- @return 0 on success, (errno, reason) on failure
@@ -170,7 +170,7 @@ write_output = (file, content) ->
 
 -- {{{ Command line support
 
---- Load template data
+--- Load template data.
 -- @param name Template name to load
 -- @return Template data
 load_templata_data = (name) ->
@@ -247,6 +247,7 @@ parse_args = (conf using nil) ->
 commands =
     --- List history entries.
     -- @param args Parsed arguments
+    -- @return Exit code suitable for shell
     list: (args using nil) ->
         if entries = find_entries args.directory
             for name, entry in pairs entries
@@ -259,6 +260,7 @@ commands =
 
     --- Add new history entry.
     -- @param args Parsed arguments
+    -- @return Exit code suitable for shell
     new: (args using nil) ->
         unless posix.stat("#{args.directory}", "type") == "directory"
             posix.mkdir args.directory
@@ -278,7 +280,9 @@ commands =
 
     --- Update history file.
     -- @param args Parsed arguments
+    -- @return Exit code suitable for shell
     update: (args using nil) ->
+        --- Template variables and functions
         template_vars =
             -- Template data
             date: args.date
@@ -321,6 +325,7 @@ commands =
 
 
 --- Main entry point.
+-- Calls :func:`os.exit` on completion.
 main = (using nil) ->
     posix.signal 2, ->
         -- Make C-c less ugly
