@@ -3,50 +3,26 @@ Command line
 
 .. note::
 
-  The documentation in this section is aimed at people wishing to contribute to
-  ``histofile``, and can be skipped if you are simply using the tool from the
-  command line.
+    The documentation in this section is aimed at people wishing to contribute
+    to ``histofile``, and can be skipped if you are simply using the tool from
+    the command line.
 
-Commands
-''''''''
+.. function:: load_templata_data(name)
 
-.. function:: commands.list(args)
+    Load template data.
 
-    List history entries.
+    :param name: Template name to load
+    :returns: Template data
 
-    :param table args: Parsed arguments
-    :rtype: int
-    :returns: 0 on success, 2 when no entries are found
+.. function:: read_config()
 
-.. function:: commands.new(args)
+    Read repository configuration.
 
-    Add new history entry.
+    :returns: Configuration data
 
-    :param table args: Parsed arguments
-    :rtype: int
-    :returns: 0 on success, 5 when writing fails
-
-.. function:: commands.update(args)
-
-    Update history file.
-
-    :param table args: Parsed arguments
-    :rtype: int
-    :returns: 0 on success, 2 when no entries are found
-
-Entry points
-'''''''''''''
-
-.. function:: main()
-
-    Main entry point.
-
-CLI support
-'''''''''''
-
-.. function:: parse_args()
+.. function:: parse_args(conf)
 
     Parse command line arguments.
 
-    :rtype: table
+    :param conf: Configuration defaults to apply
     :returns: Processed command line arguments

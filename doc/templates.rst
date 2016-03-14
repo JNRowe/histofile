@@ -46,7 +46,7 @@ The following formatting functions are provided for convenience:
 +---------------------+-------------------------------------------------------+
 | Function            | Description                                           |
 +=====================+=======================================================+
-| :func:`colourise`   | Basic terminal formatting support                     |
+| :func:`stylise`     | Basic terminal formatting support                     |
 +---------------------+-------------------------------------------------------+
 | :func:`wrap_entry`  | A simple line wrapper for text inputs                 |
 +---------------------+-------------------------------------------------------+

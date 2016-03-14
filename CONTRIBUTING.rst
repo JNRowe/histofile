@@ -9,4 +9,11 @@ want to convince me that your style is better.
 * Indentation is 4 spaces.
 * luadoc_ syntax should be used for code documentation
 
+.. note::
+
+    There is no need to update the documentation for API changes as it is
+    automatically generated with ``sphinx-luagen``.  Sadly, ``sphinx-luagen``
+    is not currently open source but the necessary changes will be synced at
+    merge time for those who do not have access to it.
+
 .. _luadoc: http://luadoc.luaforge.net/

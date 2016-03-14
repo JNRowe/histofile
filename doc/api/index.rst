@@ -11,5 +11,8 @@ API documentation
    :maxdepth: 2
 
    commandline
-   miscellaneous
+   entries
+   file_mangle
+   main
+   template
    utils
