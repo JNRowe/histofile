@@ -1,5 +1,10 @@
 {
     whitelist_globals:
+        "extra/upgrade_v0_4.moon": {
+            "dkjson",
+            "find_entries",
+            "posix",
+        },
         "histofile.moon": {
             "ANSI_COLOURS",
             "DESCRIPTION",
