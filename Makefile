@@ -1,3 +1,10 @@
+PREFIX ::= /usr
+BINDIR ::= $(PREFIX)/bin
+MANDIR ::= $(PREFIX)/share/man
+SHAREDIR ::= $(PREFIX)/share/histofile
+
+TEMPLATES ::= $(wildcard templates/*)
+
 SOURCES ::= $(wildcard *.moon)
 TARGETS ::= $(SOURCES:.moon=.lua)
 RST_SOURCES ::= $(wildcard *.rst)
@@ -32,6 +39,29 @@ sphinxbuilder:
 	$(info - Running sphinx with $(SPHINXBUILDER) builder)
 	$(SPHINXBUILD) $(SPHINXEXTRAOPTS) -b $(SPHINXBUILDER) \
 		-d doc/_build/doctrees doc/ doc/_build/$(SPHINXBUILDER)
+
+.INTERMEDIATE: histofile
+histofile: histofile.moon
+	$(info - Generating $@)
+	sed \
+	    -e '/^VERSION =/c VERSION = $(shell sed '1d;$$!s,$$,\\,' version.moon)' \
+	    -e '/^-- BEGIN PKG_PATH/,/^-- END PKG_PATH/cPKG_PATH = "$(SHAREDIR)"' \
+	    $< | moonc -- \
+	    | sed '1i #! /usr/bin/env lua' >$@
+	chmod 755 $@
+
+install: SPHINXBUILDER=man
+install: histofile sphinxbuilder
+	$(info - Installing to [$(DESTDIR)]$(PREFIX))
+	install -d $(DESTDIR)$(BINDIR)
+	install histofile $(DESTDIR)$(BINDIR)
+	install -d $(DESTDIR)$(SHAREDIR)
+	for tmpl in $(TEMPLATES); do \
+	    install -d $(DESTDIR)$(SHAREDIR)/$${tmpl}; \
+	    install -m644 $$tmpl/*.etlua $$tmpl/marker $(DESTDIR)$(SHAREDIR)/$${tmpl}; \
+	done
+	install -d $(DESTDIR)/$(MANDIR)/man1
+	install -m644 doc/_build/man/histofile.1 $(DESTDIR)/$(MANDIR)/man1
 
 clean:
 	$(info - Cleaning generated files)

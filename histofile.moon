@@ -32,6 +32,13 @@ pcall dkjson.use_lpeg
 
 VERSION = require "version"
 
+-- BEGIN PKG_PATH
+PKG_PATH = posix.dirname if _G.arg[0]\sub(1, 1) != "/"
+        "#{posix.getcwd!}/#{_G.arg[0]}"
+    else
+        _G.arg[0]
+-- END PKG_PATH
+
 
 -- [utils] Stylised output support {{{
 
@@ -174,16 +181,16 @@ write_output = (file, content) ->
 -- @param name Template name to load
 -- @return Template data
 load_templata_data = (name) ->
-    unless io.open "templates/#{name}"
+    unless io.open "#{PKG_PATH}/templates/#{name}"
         return nil, "Invalid template name"
     local marker_string
-    if f = io.open "templates/#{name}/marker"
+    if f = io.open "#{PKG_PATH}/templates/#{name}/marker"
         marker_string = f\read!
         f\close!
     else
         return nil, "Invalid template marker file"
     local tmpl
-    if f = io.open "templates/#{name}/main.etlua"
+    if f = io.open "#{PKG_PATH}/templates/#{name}/main.etlua"
         tmpl, err = etlua.compile f\read("*a")
         f\close!
     else
