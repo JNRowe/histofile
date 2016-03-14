@@ -64,6 +64,7 @@ Ideas
 '''''
 
 * Adam Baxter
+* Matt Leighton
 * Michał Fitz
 
 If I've forgotten to include your name I wholeheartedly apologise.  Just drop me

@@ -39,7 +39,9 @@ _colour_order = {"black", "red", "green", "yellow", "blue", "magenta", "cyan",
                  "white", nil, "default"}
 --- Terminal escapes for colours
 -- Foreground colour control codes
-ANSI_COLOURS = {s, "\027[#{n+29}m" for n, s in ipairs _colour_order when s}
+ANSI_FG_COLOURS = {s, "\027[#{n+29}m" for n, s in ipairs _colour_order when s}
+-- Background colour control codes
+ANSI_BG_COLOURS = {s, "\027[#{n+39}m" for n, s in ipairs _colour_order when s}
 
 
 --- Generate coloured output for the terminal.
@@ -55,7 +57,7 @@ colourise = (text, colour=nil, attrib={bold: false, underline: false}, force=fal
         return text
     s = ""
     if colour
-        s ..= ANSI_COLOURS[colour]
+        s ..= ANSI_FG_COLOURS[colour]
     if attrib.bold
         s ..= "\027[1m"
     if attrib.underline
@@ -284,6 +286,17 @@ commands =
 
             -- Support functions for templates
             :wrap_entry
+
+            -- Formatting support
+            bg: ANSI_BG_COLOURS
+            fg: ANSI_FG_COLOURS
+            bold: "\027[1m"
+            underline: "\027[4m"
+            reset: "\027[0m"
+            :colourise
+
+            form_feed: "\012"
+
         if entries = find_entries args.directory
             template_vars.entries = entries
             if file = io.open args.file

@@ -38,6 +38,7 @@ Contents
    histofile manpage <histofile.1>
    faq
    alternatives
+   templates
    release
    api/index
 
