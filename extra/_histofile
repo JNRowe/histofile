@@ -1,0 +1,72 @@
+#compdef histofile histofile.moon
+# coding=utf-8
+# histofile - ZSH completion support for histofile
+# Copyright © 2016  James Rowe <jnrowe@gmail.com>
+#
+# This file is part of histofile.
+#
+# histofile is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# histofile is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# histofile.  If not, see <http://www.gnu.org/licenses/>.
+
+# Most of this file is generated from histofile.moon, but feel free to
+# customise it!  If you make improvements, open a pull request against
+# `JNRowe/histofile' with your super changes attached.
+
+(( $+functions[__guess_versions] )) ||
+__guess_versions() {
+    local tmp v
+    tmp=$(awk '/^[0-9]+\.[0-9]+\.[0-9]+/ {print $1; exit}' NEWS.rst 2>/dev/null)
+    if [ -z "${tmp}" ]; then
+        _message "NEWS.rst not found!"
+    else
+        v=(${(ps:.:)tmp})
+        compadd ${(j:.:)v[1,2]}.$((v[3] + 1)) \
+            $v[1].$((v[2] + 1)).0 \
+            $((v[1] + 1)).0.0
+    fi
+}
+
+_arguments \
+    '--version[Show the version and exit.]' \
+    "--directory=[Location to store history entries.]:select directory:_files -/" \
+    '--help[Show this message and exit.]' \
+    ':histofile command:((
+        list\:"List history entries."
+        new\:"Add new history entry."
+        update\:"Update history file."
+    ))' \
+    '*::subcmd:->subcmd' && return 0
+
+### DGEN_TAG: Generated from histofile.moon {{{
+case "$words[1]" in
+(list)
+    _arguments \
+        '--help[Show this message and exit.]'
+    ;;
+(new)
+    _arguments \
+        '--help[Show this message and exit.]'
+    ;;
+(update)
+    _arguments \
+        '--help[Show this message and exit.]' \
+        '--date[Date of release.]:select date:_dates' \
+        '--output[Output file name.]:select file:_files' \
+        '--template[Template name.]:select template:_files -/ templates/' \
+        '--keep[Keep old data files after update]' \
+        ':set version:__guess_versions' \
+        ':select file:_files'
+    ;;
+(*)
+    ;;
+esac
+### DGEN_TAG: Generated from histofile.moon }}}
