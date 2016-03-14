@@ -120,18 +120,6 @@ find_entries = (path using nil) ->
             entry.time = name_to_time f
             entry._filename = f
             table.insert files, entry
-    -- Old histofile <0.4 files
-    if txt_files = posix.glob "#{path}/[0-9][0-9]*[.0-9][0-9]*.txt"
-        warn "Support for old .txt histofile(<v0.4) files will be removed in v0.5"
-        for f in *txt_files
-            with io.open f
-                message = \read("*a")
-                \close!
-                table.insert files, {
-                    :message
-                    time: name_to_time f
-                    _filename: f
-                }
     if #files == 0
         return nil, "No entries found"
     table.sort files, (e1, e2) -> e1.time < e2.time
