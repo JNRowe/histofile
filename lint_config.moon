@@ -15,6 +15,7 @@
             "load_templata_data",
             "parse_args",
             "posix",
+            "read_config",
             "subsequent_indent",
             "warn",
             "width",
