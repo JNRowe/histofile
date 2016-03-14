@@ -3,6 +3,13 @@ User-visible changes
 
 .. contents::
 
+0.5.0 - 2016-03-14
+------------------
+
+* Support setting argument defaults in .histofile.json.
+* Support for terminal formatting in templates.
+* Added zsh completion script
+
 0.4.0 - 2016-02-22
 ------------------
 
