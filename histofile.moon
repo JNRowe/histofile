@@ -241,6 +241,11 @@ parse_args = (conf using nil) ->
                     conf and conf.template_name or "default",
                     load_templata_data
                 \argname "<name>"
+            with \flag "--list-templates", "List available templates."
+                \action ->
+                    for n in *posix.glob("#{PKG_PATH}/templates/*")
+                        print posix.basename(n)
+                    os.exit 0
             \flag "-k --keep",
                 "Keep old data files after update (default when writing to stdout).",
                 conf and conf.keep or false

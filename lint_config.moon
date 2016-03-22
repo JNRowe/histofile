@@ -10,6 +10,7 @@
             "ANSI_FG_COLOURS",
             "DESCRIPTION",
             "NAME",
+            "PKG_PATH",
             "VERSION",
             "argparse",
             "commands",

@@ -66,6 +66,9 @@ Update history file.
 -t <name>, --template <name>
     Template name, defaults to "default"
 
+--list-templates
+    List available templates.
+
 -k, --keep
     Keep old data files after update (default when writing to stdout).
 

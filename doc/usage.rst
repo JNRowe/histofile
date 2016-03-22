@@ -72,6 +72,10 @@ Commands
 
    Template name, defaults to "default"
 
+.. option:: --list-templates
+
+   List available templates.
+
 .. option:: -k, --keep
 
    Keep old data files after update (default when writing to stdout).
