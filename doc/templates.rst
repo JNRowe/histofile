@@ -15,7 +15,7 @@ Each template set is a pair of files; :file:`marker` and :file:`main.etlua`.
 The :file:`marker` file contains a "magic" string, that is used to find the
 location in the :file:`NEWS` file to insert new entries.
 
-It is matched with lua_'s :func:`str.match` function, and should be as tight as
+It is matched with lua_'s string.match_ function, and should be as tight as
 possible to prevent false matches.  The default template's :file:`marker` is
 ``%.%. contents::`` which matches a reST_ `table of contents directive`_.
 
@@ -73,3 +73,4 @@ Along with the following variables for formatting output:
 .. _lua: http://www.lua.org/
 .. _reST: http://docutils.sourceforge.net/
 .. _table of contents directive: http://docutils.sourceforge.net/docs/ref/rst/directives.html#table-of-contents
+.. _string.match: https://www.lua.org/manual/5.3/manual.html#pdf-string.match

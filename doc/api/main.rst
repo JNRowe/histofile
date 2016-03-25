@@ -11,7 +11,9 @@ Interface support
 
     Main entry point.
 
-    Calls :func:`os.exit` on completion.
+    Calls os.exit_ on completion.
+
+.. _os.exit: https://www.lua.org/manual/5.3/manual.html#pdf-os.exit
 
 ``commands`` table
 ''''''''''''''''''
