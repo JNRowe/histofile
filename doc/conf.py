@@ -38,7 +38,7 @@ project = "histofile"
 copyright = u"Copyright © 2016  James Rowe <jnrowe@gmail.com>"
 
 try:
-    version_str = check_output(["versionah", "display", "../version.moon"])
+    version_str = check_output(['git', 'describe']).strip()
 except CalledProcessError:
     version_str = "x.x.x"
 version = version_str.rsplit(".", 1)[0]
