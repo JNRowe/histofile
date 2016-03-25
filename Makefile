@@ -14,7 +14,7 @@ MOONC ::= $(shell which moonc)
 RST2HTML ::= $(shell which rst2html.py)
 SPHINXBUILD ::= $(shell which sphinx-build)
 
-.PHONY: check clean display_sources doc lint sphinxdoc sphinxbuilder
+.PHONY: check clean display_sources dist doc lint sphinxdoc sphinxbuilder
 
 ifndef VERBOSE
 .SILENT:
@@ -77,3 +77,16 @@ lint: lint_config.lua
 check: SPHINXBUILDER=spelling
 check: SPHINXEXTRAOPTS=-W -n
 check: lint sphinxbuilder
+
+dist:
+	$(info - Generating tarballs)
+	mkdir -p dist/
+	version=$(shell git describe); \
+	arcname=histofile-$${version#v}; \
+	tarname=$$arcname.tar; \
+	git archive -o dist/$$tarname --prefix=$$arcname/ $$version; \
+	cd dist/; \
+	gzip -9 < $$tarname >|$$tarname.gz; \
+	bzip2 -9 < $$tarname >|$$tarname.bz2; \
+	xz -9 < $$tarname >|$$tarname.xz; \
+	rm $$tarname
