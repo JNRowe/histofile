@@ -30,8 +30,8 @@ It is provided with the following data:
 +-------------+---------------------------------------------------------------+
 | Variable    | Description                                                   |
 +=============+===============================================================+
-| date        | The data provided by the user with the :option:`--date`       |
-|             | option.                                                       |
+| date        | The data provided by the user with the                        |
+|             | :option:`histofile update --date` option.                     |
 +-------------+---------------------------------------------------------------+
 | entries     | The new entries to add to the output.                         |
 +-------------+---------------------------------------------------------------+
