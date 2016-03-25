@@ -5,7 +5,7 @@ SHAREDIR ::= $(PREFIX)/share/histofile
 
 TEMPLATES ::= $(wildcard templates/*)
 
-SOURCES ::= $(wildcard *.moon)
+SOURCES ::= $(wildcard *.moon extra/*.moon)
 TARGETS ::= $(SOURCES:.moon=.lua)
 RST_SOURCES ::= $(wildcard *.rst)
 RST_TARGETS ::= $(RST_SOURCES:.rst=.html)
