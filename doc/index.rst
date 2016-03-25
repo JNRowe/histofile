@@ -39,6 +39,7 @@ Contents
    faq
    alternatives
    templates
+   envvars
    release
    api/index
 

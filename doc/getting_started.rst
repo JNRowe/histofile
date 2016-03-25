@@ -22,6 +22,8 @@ session:
 Help on individual subcommands is available via ``histofile <subcommand>
 --help`` or in the :doc:`usage` document.
 
+.. _JSON-configuration:
+
 Configuration
 -------------
 
