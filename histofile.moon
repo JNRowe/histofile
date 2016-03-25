@@ -145,8 +145,7 @@ find_old_entries = (data, marker_string using nil) ->
     _, end_ = data\find marker_string
     unless end_
         return nil, "marker not found in file"
-    old_entries = data\sub end_ + 2, -2
-    return old_entries
+    data\sub end_ + 2, -2
 
 
 --- Write output to file or stdout.
