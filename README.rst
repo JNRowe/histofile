@@ -20,6 +20,8 @@ The data files are stored as JSON data in your chosen directory with one file
 per entry, which means unlike a developer updated ``NEWS`` file in your
 repository ``histofile`` should work easily across merges [1]_.
 
+Check out the documentation in ``doc/``, or the `hosted docs`_ if you prefer.
+
 ``histofile`` is released under the `GPL v3`_ license.
 
 Requirements
@@ -83,6 +85,7 @@ file an issue_ or drop me a mail_.
 If you've found a bug please attempt to include a minimal testcase so I can
 reproduce the problem, or even better a patch!
 
+.. _hosted docs: http://histofile.readthedocs.org/
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _lua: http://www.lua.org/
 .. _argparse: https://github.com/mpeterv/argparse

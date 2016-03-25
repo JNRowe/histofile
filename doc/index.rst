@@ -1,3 +1,7 @@
+..
+  Don't like reST?  Okay, check out the hosted docs at
+  http://histofile.readthedocs.org/
+
 ⛬ ``histofile``
 ================
 
