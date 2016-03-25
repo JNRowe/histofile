@@ -75,5 +75,5 @@ lint: lint_config.lua
 	$(MOONC) -l $(SOURCES)
 
 check: SPHINXBUILDER=spelling
-check: SPHINXEXTRAOPTS=-W
+check: SPHINXEXTRAOPTS=-W -n
 check: lint sphinxbuilder
