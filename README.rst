@@ -1,6 +1,10 @@
 ⛬ ``histofile`` - Manage version history files
 ===============================================
 
+.. image:: https://secure.travis-ci.org/JNRowe/histofile.png?branch=master
+   :target: http://travis-ci.org/JNRowe/histofile
+   :alt: Test state on master
+
 ``histofile`` is a small tool to aid in the management of ``NEWS`` files for
 a project.
 

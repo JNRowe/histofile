@@ -1,0 +1,26 @@
+language: c
+
+env:
+  global:
+    - PLATFORM=linux
+    - LUAROCKS_VER=2.2.0
+  matrix:
+    - LUA=lua5.1
+    - LUA=lua5.2
+    - LUA=lua5.3
+    - LUA=luajit
+
+before_install:
+  - sudo apt-get install luajit luarocks
+  - for p in argparse busted dkjson etlua luaposix moonscript; do
+      sudo luarocks install $p;
+    done
+  # Can't use make because travis' is really old
+  - moonc extra/upgrade_v0_4.moon
+
+script:
+  - busted -m 'extra/?.lua'
+
+branches:
+  except:
+    - /^play\/.*$/
