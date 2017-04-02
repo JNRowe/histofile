@@ -65,7 +65,7 @@ install: histofile sphinxbuilder
 
 clean:
 	$(info - Cleaning generated files)
-	rm -f $(TARGETS) $(RST_TARGETS)
+	$(RM) $(TARGETS) $(RST_TARGETS)
 
 display_sources:
 	@echo $(realpath $(SOURCES))
@@ -89,4 +89,4 @@ dist:
 	gzip -9 < $$tarname >|$$tarname.gz; \
 	bzip2 -9 < $$tarname >|$$tarname.bz2; \
 	xz -9 < $$tarname >|$$tarname.xz; \
-	rm $$tarname
+	$(RM) $$tarname
