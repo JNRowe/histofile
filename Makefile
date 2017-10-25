@@ -10,9 +10,9 @@ TARGETS ::= $(SOURCES:.moon=.lua)
 RST_SOURCES ::= $(wildcard *.rst)
 RST_TARGETS ::= $(RST_SOURCES:.rst=.html)
 
-MOONC ::= $(shell which moonc)
-RST2HTML ::= $(shell which rst2html.py)
-SPHINXBUILD ::= $(shell which sphinx-build)
+MOONC != which moonc
+RST2HTML != which rst2html.py
+SPHINXBUILD != which sphinx-build
 
 .PHONY: check clean display_sources dist doc lint sphinxdoc sphinxbuilder
 
