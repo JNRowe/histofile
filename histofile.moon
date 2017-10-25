@@ -34,9 +34,9 @@ VERSION = require "version"
 
 -- BEGIN PKG_PATH
 PKG_PATH = posix.dirname if _G.arg[0]\sub(1, 1) != "/"
-        "#{posix.getcwd!}/#{_G.arg[0]}"
-    else
-        _G.arg[0]
+    "#{posix.getcwd!}/#{_G.arg[0]}"
+else
+    _G.arg[0]
 -- END PKG_PATH
 
 
@@ -154,9 +154,9 @@ find_old_entries = (data, marker_string using nil) ->
 -- @return 0 on success, (errno, reason) on failure
 write_output = (file, content) ->
     text = if type(content) == "table"
-            table.concat(content, "\n")
-        else
-            content
+        table.concat(content, "\n")
+    else
+        content
     if file == "-"
         io.stdout\write text
     else
